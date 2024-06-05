@@ -1,3 +1,10 @@
 #!/usr/bin/bash
 
-CUDA_VISIBLE_DEVICES=0 python gen.py --input-image app/examples/anya.png --remove-bg --do-refine --expansion-weight 0.1 --init-type std --seed 10 --render-video --debug 
+IMAGES=$(ls app/examples/ | grep -E "\.png$|\.jpg$")
+
+for FILE in $IMAGES
+do
+	echo "GENERATING... ", $FILE
+	CUDA_VISIBLE_DEVICES=0 python gen.py --input-image app/examples/$FILE --remove-bg --do-refine --expansion-weight 0.15 --init-type thin --seed 73 --render-video --debug 
+done
+
