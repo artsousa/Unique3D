@@ -13,6 +13,7 @@ from pytorch3d.renderer import (
 )
 from pytorch3d.renderer import MeshRasterizer
 
+
 def get_camera(world_to_cam, fov_in_degrees=60, focal_length=1 / (2**0.5), cam_type='fov'):
     # pytorch3d expects transforms as row-vectors, so flip rotation: https://github.com/facebookresearch/pytorch3d/issues/1183
     R = world_to_cam[:3, :3].t()[None, ...]
@@ -67,7 +68,7 @@ def _warmup(glctx, device=None):
 
 class Pix2FacesRenderer:
     def __init__(self, device="cuda"):
-        self._glctx = dr.RasterizeGLContext(output_db=False, device=device)
+        self._glctx = dr.RasterizeCudaContext(device=device)
         self.device = device
         _warmup(self._glctx, device)
 

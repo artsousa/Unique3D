@@ -1,5 +1,6 @@
 import os
 from PIL import Image
+
 from scripts.mesh_init import build_mesh, calc_w_over_h, fix_border_with_pymeshlab_fast
 from scripts.project_mesh import multiview_color_projection
 from scripts.refine_lr_to_sr import run_sr_fast
@@ -12,6 +13,7 @@ from scripts.project_mesh import get_cameras_list
 from scripts.utils import from_py3d_mesh, to_pyml_mesh
 from pytorch3d.structures import Meshes, join_meshes_as_scene
 import numpy as np
+
 
 def fast_geo(front_normal: Image.Image, back_normal: Image.Image, side_normal: Image.Image, clamp=0., init_type="std"):
     import time
@@ -43,6 +45,7 @@ def refine_rgb(rgb_pils, front_pil):
     prompt = "4views, multiview"
     neg_prompt = NEG_PROMPT
     control_image = rgb_pil.resize((1024, 1024))
+    
     refined_rgb = refine_lr_with_sd([rgb_pil], [rgba_to_rgb(front_pil)], [control_image], prompt_list=[prompt], neg_prompt_list=[neg_prompt], pipe=model_zoo.pipe_disney_controlnet_tile_ipadapter_i2i, strength=0.2, output_size=(1024, 1024))[0]
     refined_rgbs = split_image(refined_rgb, rows=2)
     return refined_rgbs

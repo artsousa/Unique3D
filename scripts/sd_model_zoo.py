@@ -48,7 +48,7 @@ def load_base_model_components(base_model=DEFAULT_BASE_MODEL, torch_dtype=torch.
         StableDiffusionPipeline,
         **model_kwargs
     )
-    pipe.to("cpu")
+    # pipe.to("cpu")
     return pipe.components
 
 @cache_model
@@ -65,7 +65,7 @@ def load_image_encoder():
     )
     return image_encoder
 
-def load_common_sd15_pipe(base_model=DEFAULT_BASE_MODEL, device="auto", controlnet=None, ip_adapter=False, plus_model=True, torch_dtype=torch.float16, model_cpu_offload_seq=None, enable_sequential_cpu_offload=False, vae_slicing=False, pipeline_class=None, **kwargs):
+def load_common_sd15_pipe(base_model=DEFAULT_BASE_MODEL, device="balanced", controlnet=None, ip_adapter=False, plus_model=True, torch_dtype=torch.float16, model_cpu_offload_seq=False, enable_sequential_cpu_offload=False, vae_slicing=False, pipeline_class=None, **kwargs):
     model_kwargs = dict(
         torch_dtype=torch_dtype, 
         device_map=device,
@@ -119,6 +119,7 @@ def load_common_sd15_pipe(base_model=DEFAULT_BASE_MODEL, device="auto", controln
     if enable_sequential_cpu_offload:
         pipe.enable_sequential_cpu_offload()
     else:
+        pipe.reset_device_map()
         pipe = pipe.to("cuda")
         pass
         # pipe.enable_model_cpu_offload()
